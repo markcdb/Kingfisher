@@ -166,10 +166,12 @@ public class ImagePrefetcher {
                 return
             }
             
-            let initialConcurentDownloads = min(self.prefetchResources.count, self.maxConcurrentDownloads)
-            for _ in 0 ..< initialConcurentDownloads {
-                if let resource = self.pendingResources.popFirst() {
-                    self.startPrefetching(resource)
+            DispatchQueue.global(qos: .userInitiated).async {
+                let initialConcurentDownloads = min(self.prefetchResources.count, self.maxConcurrentDownloads)
+                for _ in 0 ..< initialConcurentDownloads {
+                    if let resource = self.pendingResources.popFirst() {
+                        self.startPrefetching(resource)
+                    }
                 }
             }
         }
